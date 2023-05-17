@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
-import 'package:suggest_food_app/view/screens/manage_schedule_screen.dart';
+import 'package:suggest_food_app/view/screens/admin_screen.dart';
+import 'package:suggest_food_app/view/screens/manage_account_screen.dart';
 
 import '../../provider/auth.dart';
 
@@ -22,7 +21,7 @@ class AppDrawer extends StatelessWidget {
                     'https://cdn-icons-png.flaticon.com/512/149/149071.png'),
               ),
               title: const Text(
-                "Bùi Đình Nguyên",
+                "Admin",
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -35,7 +34,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.home),
             title: const Text('Home'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed('/');
+              Navigator.of(context).pushReplacementNamed(AdminScreen.routeName);
             },
           ),
           const Divider(),
@@ -46,11 +45,11 @@ class AppDrawer extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.edit),
-            title: const Text('Manage Schedules'),
+            leading: const Icon(Icons.manage_accounts),
+            title: const Text('Manage Accounts'),
             onTap: () {
               Navigator.of(context)
-                  .pushReplacementNamed(ManageScheduleScreen.routeName);
+                  .pushReplacementNamed(ManageAccountScreen.routeName); // 1. Chọn chức năng quản lý tài khoản
             },
           ),
           const Divider(),
@@ -65,7 +64,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Logout'),
             onTap: () {
               Navigator.of(context).pop();
-              Provider.of<Auth>(context).logout();
+              Provider.of<Auth>(context, listen: false).logout();
             },
           ),
         ],

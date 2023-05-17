@@ -1,16 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import './manage_account_screen.dart';
 import 'package:suggest_food_app/view/widget/app_drawer.dart';
 import 'package:suggest_food_app/view/widget/bottom_navigationbar_item.dart'
     as BottomNavigationBarItem;
-import 'package:suggest_food_app/view/widget/card_schedule.dart';
-import 'package:suggest_food_app/view/widget/food_favorite_slide.dart';
 import '../../util/constants.dart';
 
-class HomeScreen extends StatelessWidget {
-  static const routeName = '/home';
-  const HomeScreen({super.key});
+class AdminScreen extends StatelessWidget {
+  static const routeName = '/admin';
+  const AdminScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +29,8 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: const [
-            CardSchedule(),
             Text(
-              'My menu today',
+              'Menu Today',
               style: TextStyle(
                 color: Color.fromARGB(255, 145, 199, 136),
                 fontWeight: FontWeight.w600,
@@ -41,7 +39,7 @@ class HomeScreen extends StatelessWidget {
               ),
               textAlign: TextAlign.left,
             ),
-            FoodFavoriteSlide(),
+            ManageAccountScreen(),
           ],
         ),
       ),
