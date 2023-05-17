@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:suggest_food_app/provider/auth.dart';
-import 'package:suggest_food_app/view/screens/home_screen.dart';
+import 'package:suggest_food_app/view/screens/edit_create_account_screen.dart';
+import 'package:suggest_food_app/view/screens/admin_screen.dart';
 import 'package:suggest_food_app/view/screens/auth_screen.dart';
-import 'package:suggest_food_app/view/screens/manage_schedule_screen.dart';
+import 'package:suggest_food_app/view/screens/manage_account_screen.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key?key}):super(key:key);
+  
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (ctx) => Auth(),
-        ),
+      ChangeNotifierProvider(create: (_) => Auth()),
       ],
       child: Consumer<Auth>(
         builder: (context, auth, child) => MaterialApp(
@@ -27,10 +27,11 @@ class MyApp extends StatelessWidget {
             primaryColor: Colors.green,
             accentColor: Colors.white,
           ),
-          home: true ? HomeScreen() : AuthScreen(),
+          home: auth.isAuth ? AdminScreen() : AuthScreen(),
           routes: {
-            HomeScreen.routeName: (context) => HomeScreen(),
-            ManageScheduleScreen.routeName: (context) => ManageScheduleScreen(),
+         AdminScreen.routeName: (context) => AdminScreen(),
+            ManageAccountScreen.routeName: (context) => ManageAccountScreen(),
+            EditCreateAccountScreen.routeName: (context) => EditCreateAccountScreen(),
           },
         ),
       ),
