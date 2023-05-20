@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:suggest_food_app/controller/account_controller.dart';
 import 'package:suggest_food_app/model/account.dart';
 import 'package:suggest_food_app/provider/account_data.dart';
-import 'package:suggest_food_app/view/screens/account_detail_screen.dart';
 
 class EditCreateAccountScreen extends StatefulWidget {
   static const routeName = '/edit-create-account';
@@ -22,9 +20,11 @@ class _EditCreateAccountScreenState extends State<EditCreateAccountScreen> {
     email: '',
     password: '',
   );
+  // ignore: prefer_final_fields
   var _form = GlobalKey<FormState>();
   var _isInit = true;
   var _initValues = {
+    'id': '',
     'email': '',
     'password': '',
   };
@@ -41,8 +41,9 @@ class _EditCreateAccountScreenState extends State<EditCreateAccountScreen> {
       final accountId = ModalRoute.of(context)!.settings.arguments;
       if (accountId != null) {
         _editAccount = Provider.of<AccountData>(context, listen: false)
-            .findByEmail(accountId as String);
+            .findById(accountId as String);
         _initValues = {
+          'id': _editAccount.id!,
           'email': _editAccount.email!,
           'password': _editAccount.password!,
         };
@@ -54,12 +55,9 @@ class _EditCreateAccountScreenState extends State<EditCreateAccountScreen> {
 
   void setFinalEditedAccount() {
     _editAccount = Account(
-      email: _initValues['email'].toString() == ''
-          ? ''
-          : _initValues['email'].toString(),
-      password: _initValues['password'].toString() == ''
-          ? ''
-          : _initValues['password'].toString(),
+      id: _initValues['id'].toString() == '' ? '' : _initValues['id'].toString(),
+      email: _editAccount.email,
+      password: _editAccount.password,
     );
   }
 
@@ -73,9 +71,9 @@ class _EditCreateAccountScreenState extends State<EditCreateAccountScreen> {
     setState(() {
       _isLoading = true;
     });
-    if (_editAccount.email != '') {
+    if (_editAccount.id != '') {
       await accountController.updateAccount(
-          context, _editAccount.email.toString(), _editAccount);
+          context, _editAccount.id.toString(), _editAccount);
     } else {
       try {
         await accountController.createAccount(context, _editAccount);
@@ -100,29 +98,20 @@ class _EditCreateAccountScreenState extends State<EditCreateAccountScreen> {
     setState(() {
       _isLoading = false;
     });
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pop();
-    showAccountDetailScreen();
   }
 
-  void showAccountDetailScreen() {
-    Navigator.of(context).pushNamed(
-      AccountDetailScreen.routeName,
-      arguments: _editAccount.email != ''
-          ? _editAccount.email
-          : Provider.of<AccountData>(context, listen: false)
-              .accounts
-              .last
-              .email,
-    );
-  }
-
+// Chức năng thêm tài khoản: 4. Hiển thị trang tạo tài khoản mới
+// Chức năng sửa thông tin tài khoản: 4. Hiển thị trang chỉnh sửa thông tin tài khoản
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            _editAccount.email != null ? 'Edit Account' : 'Create Account'),
+          
+            _editAccount.id != null ? 'Edit Account' : 'Create Account'),
       ),
       body: _isLoading
           ? const Center(
@@ -134,15 +123,17 @@ class _EditCreateAccountScreenState extends State<EditCreateAccountScreen> {
                 key: _form,
                 child: ListView(
                   children: [
+                    // Chức năng thêm tài khoản: 5. Nhập các thông tin cần thiết vào các trường
+                    // Chức năng sửa thông tin tài khoản: 5. Chỉnh sửa các thông tin tài khoản cần thiết
                     TextFormField(
-                      initialValue: _initValues['title'].toString(),
-                      decoration: InputDecoration(labelText: 'Titile'),
+                      initialValue: _initValues['email'].toString(),
+                      decoration: InputDecoration(labelText: 'Email'),
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please provide a value.';
                         }
-                        // 7.1. Kiểm tra xem tên đã tồn tại hay chưa
+                        // 7.1. Kiểm tra xem email đã tồn tại hay chưa
                         if (AccountController().checkAccountMail(
                             context, value)) {
                           // 7.1.1. Email đã tồn tại
@@ -154,35 +145,31 @@ class _EditCreateAccountScreenState extends State<EditCreateAccountScreen> {
                       },
                       onSaved: (value) {
                         _editAccount = Account(
-                          email: _editAccount.email,
+                          email: value,
                           password: _editAccount.password,
                         );
                       },
                     ),
-                    Container(
-                      height: deviceSize.height - 70 - 16 * 2 - 20 - 200,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white.withOpacity(0.9),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.4),
-                            offset: const Offset(0, 2),
-                            blurRadius: 4.0,
-                          ),
-                        ],
-                      ),
+                    TextFormField(
+                      initialValue: _initValues['password'].toString(),
+                      decoration: InputDecoration(labelText: 'Password'),
+                      textInputAction: TextInputAction.next,
+                      onSaved: (value) {
+                        _editAccount = Account(
+                          email: _editAccount.email,
+                          password: value,
+                        );
+                      },
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     TextButton(
-                      // Tạo tài khoản hoặc update tài khoản
+                      // Chức năng thêm tài khoản: 6. Nhấn button Create 
+                      // Chức năng sửa thông tin tài khoản: 6. Nhấn button Update
                       onPressed: _saveForm,
                       child: Text(
-                        _editAccount.email != null ? 'Update' : 'Create',
+                        _editAccount.id != null ? 'Update' : 'Create',
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary),
                       ),

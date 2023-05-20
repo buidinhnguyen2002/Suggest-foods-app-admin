@@ -11,12 +11,12 @@ class AccountController {
   }
 
   Future<void> updateAccount(
-      BuildContext context, String email, Account account) async {
+      BuildContext context, String id, Account account) async {
     await Provider.of<AccountData>(context, listen: false)
-        .updateAccount(email, account);
+        .updateAccount(id, account);
   }
   // Chức năng xóa tài khoản
-// 4.2 Submit
+// 4.2.1 Submit
   Future<void> deleteAccount(BuildContext context, String id) async {
     await Provider.of<AccountData>(context, listen: false).deleteAccounts(id);
   }
