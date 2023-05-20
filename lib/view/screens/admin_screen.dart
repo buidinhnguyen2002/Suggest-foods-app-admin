@@ -17,30 +17,43 @@ class AdminScreen extends StatelessWidget {
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(
-        backgroundColor: Colors.green,
-        elevation: 0,
-        centerTitle: true,
-        title: Text('Home'),
+        title: Text('Admin Page'),
       ),
-      body: Container(
-        color: Colors.white,
-        width: deviceSize.width,
-        height: deviceSize.height,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            Text(
-              'Menu Today',
-              style: TextStyle(
-                color: Color.fromARGB(255, 145, 199, 136),
-                fontWeight: FontWeight.w600,
-                fontSize: 25,
-                height: 1.4,
-              ),
-              textAlign: TextAlign.left,
-            ),
-            ManageAccountScreen(),
-          ],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(height: 20),
+          Text(
+            'Welcome to Admin Page',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              // Điều hướng đến trang báo cáo
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ReportScreen()),
+              );
+            },
+            child: Text('View Reports'),
+          ),
+        ],
+      ),
+    );
+  }
+}class ReportScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Reports'),
+      ),
+      body: Center(
+        child: Text(
+          'Reports will be displayed here',
+          style: TextStyle(fontSize: 20),
         ),
       ),
     );

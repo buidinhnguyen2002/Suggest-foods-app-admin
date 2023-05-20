@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:suggest_food_app/provider/account_data.dart';
 import 'package:suggest_food_app/provider/auth.dart';
 import 'package:suggest_food_app/view/screens/edit_create_account_screen.dart';
 import 'package:suggest_food_app/view/screens/admin_screen.dart';
@@ -18,6 +19,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
       ChangeNotifierProvider(create: (_) => Auth()),
+       ChangeNotifierProxyProvider<Auth, AccountData>(
+          create: (context) => AccountData([], authToken: ''),
+          update: (context, auth, previousSchedules) => AccountData(
+              previousSchedules == null ? [] : previousSchedules.accounts,
+              authToken: auth.token,
+              accountId: auth.userId),
+        ),
       ],
       child: Consumer<Auth>(
         builder: (context, auth, child) => MaterialApp(

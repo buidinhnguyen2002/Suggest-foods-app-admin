@@ -13,7 +13,7 @@ class ManageAccountScreen extends StatelessWidget {
   const ManageAccountScreen({super.key});
   Future<void> _refreshAccounts(BuildContext context) async {
     await Provider.of<AccountData>(context, listen: false)
-        .getAccounts();
+        .fetchAndSetAccount();
   }
 
   @override
@@ -26,8 +26,7 @@ class ManageAccountScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         title: Text('My accounts'),
-         // Chức năng thêm tài khoản mới - 3. Chọn button Tạo
-         // Chức năng sửa thông tin tài khoản - 3. Chọn button Sửa
+         // Chức năng thêm tài khoản mới - 3. Chọn icon Thêm
         actions: [
           IconButton(
             onPressed: () {
@@ -42,7 +41,9 @@ class ManageAccountScreen extends StatelessWidget {
           ),
         ],
       ),
-      // Chức năng xóa tài khoản - 6. Hiển thị trang quản lý tài khoản mới được cập nhật
+      // Chức năng thêm tài khoản - 9. Hiển thị danh sách tài khoản mới được cập nhật
+      // Chức năng sửa thông tin tài khoản - 9. Hiển thị danh sách tài khoản mới được cập nhật
+      // Chức năng xóa tài khoản - 6. Hiển thị danh sách tài khoản mới được cập nhật
       body: FutureBuilder(
         future: _refreshAccounts(context),
         builder: (context, snapshot) => snapshot.connectionState ==
@@ -59,6 +60,7 @@ class ManageAccountScreen extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: ListView.builder(
                     itemBuilder: (context, index) => AccountItem(
+                      id: accountData.accounts[index].id,
                       email: accountData.accounts[index].email,
                       password: accountData.accounts[index].password,
                     ),
